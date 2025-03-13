@@ -116,21 +116,32 @@ const onGenerateTrip=async ()=>{
   SaveAiTrip(result?.response?.text());
 };
 
-const SaveAiTrip =async (TripData)=>{
-  
-  setLoading(true)
-  const docID = Date.now().toString()
-  const user = JSON.parse(localStorage.getItem('user'))
+const SaveAiTrip = async (TripData) => {
+  setLoading(true);
+  const docID = Date.now().toString();
+  const user = JSON.parse(localStorage.getItem("user"));
 
-await setDoc(doc(db, "AITrips", docID), {
-  userSelection :formData,
-  tripData: JSON.parse(TripData),
-  userEmail: user?.email,
-  id:docID
-});
-setLoading(false)
-navigate('/view-trip/'+docID)
-}
+  let parsedTripData;
+  try {
+    parsedTripData = JSON.parse(TripData);
+  } catch (error) {
+    console.error("JSON Parsing Error:", error, "TripData:", TripData);
+    toast("Error processing trip data. Please try again.");
+    setLoading(false);
+    return;
+  }
+
+  await setDoc(doc(db, "AITrips", docID), {
+    userSelection: formData,
+    tripData: parsedTripData,
+    userEmail: user?.email,
+    id: docID,
+  });
+
+  setLoading(false);
+  navigate("/view-trip/" + docID);
+};
+
 
 const getUserProfile = (tokenInfo)=>{
   axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token }`,{

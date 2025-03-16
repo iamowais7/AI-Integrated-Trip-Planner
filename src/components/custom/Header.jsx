@@ -71,19 +71,31 @@ function Header() {
             :<Button onClick={()=>setOpenDialog(true)}>Sign In</Button>
           }  
         </div>
-        <Dialog open={openDialog}>
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
   <DialogContent>
     <DialogHeader>
+      <button
+        className="absolute right-3 top-3"
+        onClick={() => setOpenDialog(false)}
+      >
+        ✖
+      </button>
       <DialogDescription>
-        <img src="/logo.svg"/>
+        <img src="/logoipsum-339.svg" alt="Logo" />
         <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
         <p>Sign in to the App with Google authentication securely</p>
-        <Button onClick={login} 
-        className="w-full mt-5 flex gap-4 items-center"><FcGoogle className="h-8 w-8"/>Sign In With Google</Button>
+        <Button
+          onClick={login}
+          className="w-full mt-5 flex gap-4 items-center"
+        >
+          <FcGoogle className="h-8 w-8" />
+          Sign In With Google
+        </Button>
       </DialogDescription>
     </DialogHeader>
   </DialogContent>
-        </Dialog>
+</Dialog>
+
     </div>
   )
 }

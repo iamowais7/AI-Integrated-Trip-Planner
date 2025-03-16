@@ -3,6 +3,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from 'react-router-dom'
 import UserTripCardItem from './components/UserTripCardItem'
+import Footer from '@/view-trip/components/Footer'
 
 function Mytrips() {
 
@@ -44,6 +45,7 @@ function Mytrips() {
         ))
         }
       </div>
+      <Footer/>
     </div>
   )
 }

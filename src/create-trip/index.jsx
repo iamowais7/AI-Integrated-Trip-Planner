@@ -21,6 +21,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import Footer from "@/view-trip/components/Footer";
 
 
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -239,7 +240,7 @@ const getUserProfile = (tokenInfo)=>{
   </DialogContent>
         </Dialog>
 
-
+      <Footer/>
     </div>
   )
 }

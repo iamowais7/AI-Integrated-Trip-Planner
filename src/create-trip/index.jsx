@@ -127,7 +127,7 @@ const SaveAiTrip = async (TripData) => {
     parsedTripData = JSON.parse(TripData);
   } catch (error) {
     console.error("JSON Parsing Error:", error, "TripData:", TripData);
-    toast("Error processing trip data. Please try again.");
+    toast("Error processing trip data(Network Issue). Please try again.");
     setLoading(false);
     return;
   }
@@ -221,12 +221,11 @@ const getUserProfile = (tokenInfo)=>{
           <Button onClick={onGenerateTrip} disabled={loading}>
             {
               loading?<AiOutlineLoading3Quarters className="h-7 w-7 animate-spin"/>:'Generate Trip'
-
             }
             </Button>
         </div>
 
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
   <DialogContent>
     <DialogHeader>
       <button

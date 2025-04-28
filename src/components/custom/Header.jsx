@@ -57,7 +57,7 @@ function Header() {
               <a href="/my-trips">
               <Button varient='outline' classname='rounded-full'>My Trips</Button>  
               </a>
-              <Popover>
+              {/* <Popover>
                   <PopoverTrigger>{user?.picture && <img src={user.picture} className="h-[35px] w-[35px] rounded-full" alt="User Profile" />}</PopoverTrigger>
                   <PopoverContent>
                     <h2 className='cursor-pointer' onClick={()=>{
@@ -66,7 +66,7 @@ function Header() {
                       window.location.reload()
                     }}>Logout</h2>
                   </PopoverContent>
-                 </Popover>
+                 </Popover> */}
             </div>
             :<Button onClick={()=>setOpenDialog(true)}>Sign In</Button>
           }  
@@ -80,7 +80,7 @@ function Header() {
       >
         ✖
       </button>
-      <DialogDescription>
+      {/* <DialogDescription>
         <img src="/logoipsum-339.svg" alt="Logo" />
         <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
         <p>Sign in to the App with Google authentication securely</p>
@@ -91,7 +91,7 @@ function Header() {
           <FcGoogle className="h-8 w-8" />
           Sign In With Google
         </Button>
-      </DialogDescription>
+      </DialogDescription> */}
     </DialogHeader>
   </DialogContent>
 </Dialog>

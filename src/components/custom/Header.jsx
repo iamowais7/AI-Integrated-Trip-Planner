@@ -57,7 +57,7 @@ function Header() {
               <a href="/my-trips">
               <Button varient='outline' classname='rounded-full'>My Trips</Button>  
               </a>
-              {/* <Popover>
+              <Popover>
                   <PopoverTrigger>{user?.picture && <img src={user.picture} className="h-[35px] w-[35px] rounded-full" alt="User Profile" />}</PopoverTrigger>
                   <PopoverContent>
                     <h2 className='cursor-pointer' onClick={()=>{
@@ -66,7 +66,7 @@ function Header() {
                       window.location.reload()
                     }}>Logout</h2>
                   </PopoverContent>
-                 </Popover> */}
+                 </Popover>
             </div>
             :<Button onClick={()=>setOpenDialog(true)}>Sign In</Button>
           }  

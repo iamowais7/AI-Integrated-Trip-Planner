@@ -21,12 +21,12 @@ const router = createBrowserRouter([
     element: <CreateTrip/>
   },
   {
-    // path:'/view-trip/:tripId',
-    // element:<Viewtrip/>
+    path:'/view-trip/:tripId',
+    element:<Viewtrip/>
   },
   {
-    // path:'/my-trips',
-    // element:<Mytrips/>
+    path:'/my-trips',
+    element:<Mytrips/>
   }
 ])
 createRoot(document.getElementById('root')).render(

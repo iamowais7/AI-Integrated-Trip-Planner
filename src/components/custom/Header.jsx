@@ -80,7 +80,7 @@ function Header() {
       >
         ✖
       </button>
-      {/* <DialogDescription>
+      <DialogDescription>
         <img src="/logoipsum-339.svg" alt="Logo" />
         <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
         <p>Sign in to the App with Google authentication securely</p>
@@ -91,7 +91,7 @@ function Header() {
           <FcGoogle className="h-8 w-8" />
           Sign In With Google
         </Button>
-      </DialogDescription> */}
+      </DialogDescription>
     </DialogHeader>
   </DialogContent>
 </Dialog>

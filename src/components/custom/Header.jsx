@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import {
   Popover,
@@ -15,7 +15,6 @@ import {
 import axios from 'axios';
 import { FcGoogle } from "react-icons/fc";
 import { FaRobot } from "react-icons/fa";
-import { FaPhoneAlt } from "react-icons/fa";
 import { MdOutlinePhone } from "react-icons/md";
 
 function Header() {

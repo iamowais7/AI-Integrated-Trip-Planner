@@ -1,11 +1,13 @@
 import Footer from '@/view-trip/components/Footer';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function Chat() {
   const [userInput, setUserInput] = useState("");
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const api_key = import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY
 
   const handleAskHelp = async () => {
     if (!userInput.trim()) return;
@@ -14,7 +16,7 @@ function Chat() {
 
     try {
       const result = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBzjwj3tGksxTeETx1f2vUW0fscD2TaJ2I",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${api_key}`,
         {
           contents: [
             {

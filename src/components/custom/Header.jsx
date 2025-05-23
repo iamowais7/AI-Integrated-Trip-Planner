@@ -57,6 +57,9 @@ function Header() {
               <a href="/my-trips">
               <Button varient='outline' classname='rounded-full'>My Trips</Button>  
               </a>
+              <a href="/help">
+              <Button varient='outline' classname='rounded-full'>Help</Button>  
+              </a>
               <Popover>
                   <PopoverTrigger>{user?.picture && <img src={user.picture} className="h-[35px] w-[35px] rounded-full" alt="User Profile" />}</PopoverTrigger>
                   <PopoverContent>

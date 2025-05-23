@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/dialog"
 import axios from 'axios';
 import { FcGoogle } from "react-icons/fc";
+import { FaRobot } from "react-icons/fa";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdOutlinePhone } from "react-icons/md";
 
 function Header() {
   
@@ -58,7 +61,10 @@ function Header() {
               <Button varient='outline' classname='rounded-full'>My Trips</Button>  
               </a>
               <a href="/help">
-              <Button varient='outline' classname='rounded-full'>Help</Button>  
+              <Button varient='outline' classname='rounded-full'>Help Line <MdOutlinePhone /></Button>  
+              </a>
+              <a href="/chat">
+              <Button varient='outline' classname='rounded-full'>Support<FaRobot /></Button>  
               </a>
               <Popover>
                   <PopoverTrigger>{user?.picture && <img src={user.picture} className="h-[35px] w-[35px] rounded-full" alt="User Profile" />}</PopoverTrigger>

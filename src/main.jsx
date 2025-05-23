@@ -11,6 +11,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import Viewtrip from './view-trip/[tripId]'
 import Mytrips from './my-trip'
 import Help from './help'
+import Chat from './chat'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path:'/help',
     element:<Help/>
+  },
+   {
+    path:'/chat',
+    element:<Chat/>
   }
 ])
 createRoot(document.getElementById('root')).render(

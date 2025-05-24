@@ -65,6 +65,9 @@ function Header() {
               <a href="/chat">
               <Button varient='outline' classname='rounded-full'>Support<FaRobot /></Button>  
               </a>
+              <a href="/faqs">
+              <Button varient='outline' classname='rounded-full'>FAQs</Button>  
+              </a>
               <Popover>
                   <PopoverTrigger>{user?.picture && <img src={user.picture} className="h-[35px] w-[35px] rounded-full" alt="User Profile" />}</PopoverTrigger>
                   <PopoverContent>

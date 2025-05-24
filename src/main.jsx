@@ -12,6 +12,7 @@ import Viewtrip from './view-trip/[tripId]'
 import Mytrips from './my-trip'
 import Help from './help'
 import Chat from './chat'
+import FAQs from './faqs'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
    {
     path:'/chat',
     element:<Chat/>
+  },
+   {
+    path:'/faqs',
+    element:<FAQs/>
   }
 ])
 createRoot(document.getElementById('root')).render(

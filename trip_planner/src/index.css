@@ -68,3 +68,50 @@
     @apply bg-black/20 backdrop-blur-md border border-white/10;
   }
 }
+
+/* Mapbox geocoder dark mode overrides */
+.dark .mapboxgl-ctrl-geocoder {
+  background-color: hsl(222 47% 11%) !important;
+  color: hsl(210 40% 98%) !important;
+  box-shadow: 0 0 0 1px hsl(217 33% 20%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder input {
+  background-color: hsl(222 47% 11%) !important;
+  color: hsl(210 40% 98%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder input::placeholder {
+  color: hsl(215 20% 55%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder--icon {
+  fill: hsl(215 20% 55%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder--suggestion {
+  color: hsl(210 40% 98%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder--suggestion-title {
+  color: hsl(210 40% 98%) !important;
+}
+
+.dark .mapboxgl-ctrl-geocoder--suggestion-address {
+  color: hsl(215 20% 65%) !important;
+}
+
+.dark .suggestions {
+  background-color: hsl(222 47% 11%) !important;
+  border: 1px solid hsl(217 33% 20%) !important;
+}
+
+.dark .suggestions > li > a {
+  color: hsl(210 40% 98%) !important;
+}
+
+.dark .suggestions > .active > a,
+.dark .suggestions > li > a:hover {
+  background-color: hsl(217 33% 17%) !important;
+  color: hsl(210 40% 98%) !important;
+}

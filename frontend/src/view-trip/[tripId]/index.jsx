@@ -6,9 +6,10 @@ import InfoSection from '../components/InfoSection';
 import Hotels from '../components/Hotels';
 import PlacesToVisit from '../components/PlacesToVisit';
 import WeatherSection from '../components/WeatherSection';
+import MapView from '../components/MapView';
 import Footer from '../components/Footer';
 
-const TABS = ['Overview', 'Hotels', 'Itinerary', 'Weather'];
+const TABS = ['Overview', 'Hotels', 'Itinerary', 'Map', 'Weather'];
 
 function Viewtrip() {
   const { tripId } = useParams();
@@ -45,6 +46,7 @@ function Viewtrip() {
       {activeTab === 'Overview' && <InfoSection trip={trip} loading={loading} />}
       {activeTab === 'Hotels' && <Hotels trip={trip} loading={loading} />}
       {activeTab === 'Itinerary' && <PlacesToVisit trip={trip} loading={loading} />}
+      {activeTab === 'Map' && <MapView trip={trip} />}
       {activeTab === 'Weather' && (
         <WeatherSection location={trip?.userSelection?.location} />
       )}

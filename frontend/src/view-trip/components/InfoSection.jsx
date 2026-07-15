@@ -4,6 +4,7 @@ import { Calendar, Wallet, Users, Share2, Download, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import ShareModal from './ShareModal';
 import TripEditModal from './TripEditModal';
+import CostEstimator from './CostEstimator';
 import { exportTripPdf } from '@/lib/pdfExport';
 
 function InfoSection({ trip, loading }) {
@@ -68,6 +69,10 @@ function InfoSection({ trip, loading }) {
           <strong className="text-foreground">Notes: </strong>{trip.notes}
         </div>
       )}
+
+      <div className="mt-6">
+        <CostEstimator trip={trip} />
+      </div>
 
       <ShareModal open={showShare} onClose={() => setShowShare(false)} tripId={trip._id} />
       <TripEditModal open={showEdit} onClose={() => setShowEdit(false)} trip={trip} />

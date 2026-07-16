@@ -88,7 +88,8 @@ const CreateTrip = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/ai/generate', {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_BASE}/ai/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ location, noOfDays: Number(noOfDays), budget, traveler }),

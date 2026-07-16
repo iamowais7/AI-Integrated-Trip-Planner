@@ -14,7 +14,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://ai-integrated-trip-planner.vercel.app',
+  /\.vercel\.app$/,
+];
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.some((o) => o instanceof RegExp ? o.test(origin) : o === origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

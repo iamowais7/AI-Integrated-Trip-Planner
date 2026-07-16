@@ -5,7 +5,7 @@ function HotelCardItem({ hotel }) {
   const photoUrl = useImage(hotel?.hotelName);
 
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel?.hotelName + ',' + hotel?.hotelAddress)}`;
-  const bookingUrl = `https://www.booking.com/search.html?ss=${encodeURIComponent(hotel?.hotelName + ' ' + hotel?.hotelAddress)}`;
+  const bookingUrl = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(hotel?.hotelName)}`;
 
   return (
     <div className="rounded-2xl overflow-hidden border border-border hover:shadow-lg hover:-translate-y-1 transition-all group flex flex-col">

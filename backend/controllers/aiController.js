@@ -100,3 +100,27 @@ export const generateTrip = async (req, res) => {
     }
   }
 };
+
+export const supportChat = async (req, res) => {
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ message: 'message is required' });
+  try {
+    const result = await getGroq().chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful support assistant for Elixir AI Trip Planner — an app that generates personalized travel itineraries using AI. Help users with questions about the app, trip planning, features, and travel advice. Be concise and friendly.',
+        },
+        { role: 'user', content: message },
+      ],
+      temperature: 0.7,
+      max_tokens: 512,
+    });
+    const reply = result.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+    res.json({ reply });
+  } catch (err) {
+    console.error('Support chat error:', err.message);
+    res.status(500).json({ message: 'Failed to get response' });
+  }
+};

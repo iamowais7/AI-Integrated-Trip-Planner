@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from './components/ui/sonner';
 
 import Header from './components/custom/Header';
+import FloatingContact from './components/custom/FloatingContact';
 import ProtectedRoute from './components/ProtectedRoute';
 import CreateTrip from './create-trip';
 import Viewtrip from './view-trip/[tripId]';
@@ -22,6 +23,7 @@ const RootLayout = () => (
     <Header />
     <Toaster richColors />
     <Outlet />
+    <FloatingContact />
   </>
 );
 

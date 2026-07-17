@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import { Sun, Moon, Plus, Map, Phone, Bot, HelpCircle } from 'lucide-react';
@@ -14,6 +14,10 @@ function Header() {
   const [openDialog, setOpenDialog] = useState(false);
   const { theme, setTheme } = useTheme();
   const { user, isLoggedIn, login, logout } = useAuthStore();
+  const location = useLocation();
+
+  const navClass = (path) =>
+    `gap-1 ${location.pathname === path ? 'bg-primary/10 text-primary font-semibold' : ''}`;
 
   useEffect(() => {
     if (isLoggedIn && !user) {
@@ -50,27 +54,27 @@ function Header() {
         {isLoggedIn ? (
           <>
             <Link to="/create-trip">
-              <Button variant="ghost" size="sm" className="gap-1">
+              <Button variant="ghost" size="sm" className={navClass('/create-trip')}>
                 <Plus className="h-4 w-4" /> Create Trip
               </Button>
             </Link>
             <Link to="/my-trips">
-              <Button variant="ghost" size="sm" className="gap-1">
+              <Button variant="ghost" size="sm" className={navClass('/my-trips')}>
                 <Map className="h-4 w-4" /> My Trips
               </Button>
             </Link>
             <Link to="/help">
-              <Button variant="ghost" size="sm" className="gap-1 hidden md:flex">
+              <Button variant="ghost" size="sm" className={`hidden md:flex ${navClass('/help')}`}>
                 <Phone className="h-4 w-4" /> Help
               </Button>
             </Link>
             <Link to="/chat">
-              <Button variant="ghost" size="sm" className="gap-1 hidden md:flex">
+              <Button variant="ghost" size="sm" className={`hidden md:flex ${navClass('/chat')}`}>
                 <Bot className="h-4 w-4" /> Support
               </Button>
             </Link>
             <Link to="/faqs">
-              <Button variant="ghost" size="sm" className="gap-1 hidden md:flex">
+              <Button variant="ghost" size="sm" className={`hidden md:flex ${navClass('/faqs')}`}>
                 <HelpCircle className="h-4 w-4" /> FAQs
               </Button>
             </Link>

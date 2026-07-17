@@ -1,72 +1,62 @@
 import Footer from '@/view-trip/components/Footer';
-import axios from 'axios';
 import { useState } from 'react';
+import { Send, Bot } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import api from '@/api/client';
 
 function Chat() {
-  const [userInput, setUserInput] = useState("");
-  const [response, setResponse] = useState("");
+  const [userInput, setUserInput] = useState('');
+  const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const api_key = import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY
 
   const handleAskHelp = async () => {
     if (!userInput.trim()) return;
     setLoading(true);
-    setResponse("");
-
+    setResponse('');
     try {
-      const result = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${api_key}`,
-        {
-          contents: [
-            {
-              parts: [{ text: userInput }],
-            },
-          ],
-        }
-      );
-
-      const aiText = result.data.candidates?.[0]?.content?.parts?.[0]?.text;
-      setResponse(aiText || "No helpful response received.");
-    } catch (error) {
-      console.error("Error getting help:", error);
-      setResponse("Sorry, something went wrong.");
+      const res = await api.post('/ai/support', { message: userInput });
+      setResponse(res.data.reply || 'No response received.');
+    } catch {
+      setResponse('Sorry, something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4">
-      <div className="w-full max-w-2xl p-6 bg-white rounded-2xl shadow-lg border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">💬 Support Assistant</h2>
-
-        <textarea
-          rows={4}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 resize-none"
-          placeholder="Describe the help you need..."
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-        />
-
-        <button
-          onClick={handleAskHelp}
-         className="w-full bg-black text-white py-3 rounded-lg font-medium text-lg hover:bg-gray-800 transition disabled:opacity-50"
-          disabled={loading}
-        >
-          {loading ? "Thinking..." : "Ask "}
-        </button>
-
-        {response && (
-          <div className="mt-6 bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-inner text-gray-800">
-            <h3 className="font-semibold mb-2">🤖 AI Response:</h3>
-            <p className="whitespace-pre-wrap">{response}</p>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-2xl mx-auto px-5 py-12">
+        <div className="border border-border rounded-2xl p-6 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-5">
+            <Bot className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-bold text-foreground">Support Assistant</h2>
           </div>
-        )}
+
+          <textarea
+            rows={4}
+            className="w-full p-3 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary mb-4 resize-none text-sm placeholder:text-muted-foreground"
+            placeholder="Describe the help you need... (Ctrl+Enter to send)"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && e.ctrlKey && handleAskHelp()}
+          />
+
+          <Button onClick={handleAskHelp} disabled={loading} className="w-full gap-2">
+            <Send className="h-4 w-4" />
+            {loading ? 'Thinking...' : 'Ask Support'}
+          </Button>
+
+          {response && (
+            <div className="mt-5 bg-muted border border-border p-4 rounded-xl text-sm text-foreground">
+              <p className="font-semibold mb-2 flex items-center gap-1 text-primary">
+                <Bot className="h-4 w-4" /> AI Response:
+              </p>
+              <p className="whitespace-pre-wrap leading-relaxed">{response}</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </div>
   );
 }

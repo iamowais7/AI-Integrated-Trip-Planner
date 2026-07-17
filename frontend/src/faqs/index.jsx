@@ -1,108 +1,71 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
 import Footer from '@/view-trip/components/Footer';
 
 const faqs = [
-  {
-    question: "How does the AI generate travel plans?",
-    answer: "The AI uses your input (destination, days, budget, traveler type) and accesses real-time data to create a detailed day-by-day itinerary with hotels, places to visit, and travel tips.",
-  },
-  {
-    question: "Can I customize the generated travel plan?",
-    answer: "Yes, after the AI generates the plan, you can modify destinations, change hotels, or update your preferences to get a revised plan.",
-  },
-   {
-    question: "Does the AI Trip Planner suggest places to visit?",
-  answer: "Yes, it provides a detailed list of places to visit each day, including tourist attractions, landmarks, and activities based on your preferences and travel type.",
-  },
-  {
-    question: "Does it include hotel booking options?",
-    answer: "The app suggests hotel options with details such as price, rating, and location, but direct booking may redirect you to trusted third-party platforms.",
-  },
-  {
-    question: "Is real-time weather or local events considered?",
-    answer: "Future versions may include weather forecasts and local events. Currently, the focus is on optimized plans using location data and best times to visit.",
-  },
-  {
-    question: "What types of travelers does it support?",
-    answer: "It supports various traveler types including solo, couples, family, adventure seekers, and luxury travelers, adjusting the plan accordingly.",
-  },
-  {
-    question: "Is the AI trained on real travel data?",
-    answer: "Yes, the AI is prompted using curated templates and real-time API data from Google and other sources for accuracy and relevance.",
-  },
-   {
-    question: "Is this planner free to use?",
-    answer: "Currently, the basic version is free. Advanced features may be part of a premium tier in the future.",
-  },
-  {
-     question: "How can I report an issue or get support?",
-  answer: "If you have any error, you can reach me at khan.owais0555@gmail.com.",
-  },
-  {
-    question: "Who developed this project?",
-    answer: "This project was developed by Mohammad Owais Khan as part of an academic submission under the supervision of Dr. Mohammad Nadeem in 2025.",
-  },
+  { question: "How does the AI generate travel plans?", answer: "The AI uses your input (destination, days, budget, traveler type) to create a detailed day-by-day itinerary with hotels, places to visit, and travel tips." },
+  { question: "Can I customize the generated travel plan?", answer: "Yes, after the AI generates the plan, you can edit trip notes and preferences using the Edit button on the trip page." },
+  { question: "Does the AI Trip Planner suggest places to visit?", answer: "Yes, it provides a detailed list of places to visit each day, including tourist attractions, landmarks, and activities based on your preferences." },
+  { question: "Does it include hotel booking options?", answer: "The app suggests hotel options with price, rating, and location. Each hotel has a direct 'Book Now' link to Booking.com." },
+  { question: "Is real-time weather considered?", answer: "Yes! The app includes a 7-day weather forecast for your destination powered by Open-Meteo API." },
+  { question: "What types of travelers does it support?", answer: "Solo adventurers, couples, families, and groups — the AI adjusts the itinerary based on your traveler type." },
+  { question: "Can I share my trip with others?", answer: "Yes, use the Share button on any trip to generate a public link. Anyone can view it without logging in." },
+  { question: "Can I download my itinerary as PDF?", answer: "Yes, click the PDF button on your trip overview to download a styled PDF of your complete itinerary." },
+  { question: "Is this planner free to use?", answer: "Yes, the app is completely free to use with no subscription required." },
+  { question: "How can I report an issue or get support?", answer: "Use the Support page (Chat) to ask our AI assistant, or reach the developer at khan.owais0555@gmail.com." },
+  { question: "Who developed this project?", answer: "Elixir AI Trip Planner was developed by Owais Khan. Visit owaisfolio.vercel.app to learn more." },
 ];
 
 function FAQs() {
-     const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(null);
 
-  const toggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
   return (
-    <div>
-   <div className="max-w-4xl mx-auto px-6 py-10">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-500 text-white py-4 px-6 rounded-2xl shadow-lg inline-block">
-          Frequently Asked Questions
-        </h1>
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-3xl mx-auto px-5 py-12">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-extrabold text-foreground mb-2">Frequently Asked Questions</h1>
+          <p className="text-muted-foreground text-sm">Everything you need to know about Elixir AI Trip Planner</p>
+        </div>
 
-      <div className="space-y-5">
-        {faqs.map((faq, index) => {
-          const isOpen = openIndex === index;
-          return (
-            <div
-              key={index}
-              className="bg-white/80 backdrop-blur border border-gray-200 shadow-lg rounded-2xl p-4 transition-all"
-            >
-              <button
-                onClick={() => toggle(index)}
-                className="flex justify-between items-center w-full text-left"
-              >
-                <span className="text-lg font-medium text-gray-800">{faq.question}</span>
-                {isOpen ? (
-                  <Minus className="text-blue-600 w-5 h-5" />
-                ) : (
-                  <Plus className="text-blue-600 w-5 h-5" />
-                )}
-              </button>
+        <div className="space-y-3">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div key={index} className="border border-border rounded-2xl bg-card overflow-hidden transition-all">
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="flex justify-between items-center w-full text-left px-5 py-4 hover:bg-muted/50 transition-colors"
+                >
+                  <span className="text-sm font-semibold text-foreground pr-4">{faq.question}</span>
+                  {isOpen
+                    ? <Minus className="text-primary w-4 h-4 shrink-0" />
+                    : <Plus className="text-primary w-4 h-4 shrink-0" />
+                  }
+                </button>
 
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="mt-3 text-gray-600 leading-relaxed">
-                      {faq.answer}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed border-t border-border pt-3">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </div>
+      <Footer />
     </div>
-    <Footer/>
-    </div>
-  )
+  );
 }
 
-export default FAQs
+export default FAQs;

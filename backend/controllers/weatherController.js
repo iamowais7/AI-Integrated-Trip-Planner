@@ -21,7 +21,7 @@ export const getWeather = async (req, res) => {
       params: {
         latitude,
         longitude,
-        daily: 'temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum',
+        daily: 'temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum',
         timezone: 'auto',
         forecast_days: 7,
       },
@@ -29,14 +29,15 @@ export const getWeather = async (req, res) => {
 
     const daily = weatherRes.data.daily;
 
+    const wCode = daily.weather_code ?? daily.weathercode;
     const forecast = daily.time.map((date, i) => ({
       date,
       maxTemp: daily.temperature_2m_max[i],
       minTemp: daily.temperature_2m_min[i],
-      weatherCode: daily.weathercode[i],
+      weatherCode: wCode[i],
       precipitation: daily.precipitation_sum[i],
-      description: getWeatherDescription(daily.weathercode[i]),
-      icon: getWeatherIcon(daily.weathercode[i]),
+      description: getWeatherDescription(wCode[i]),
+      icon: getWeatherIcon(wCode[i]),
     }));
 
     res.json({ location: `${name}, ${country}`, forecast });

@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+const weatherCache = new Map();
+const CACHE_TTL = 3 * 60 * 60 * 1000; // 3 hours
+
 export const getWeather = async (req, res) => {
   const { location } = req.query;
   if (!location) return res.status(400).json({ message: 'location is required' });
@@ -8,6 +11,14 @@ export const getWeather = async (req, res) => {
     const cityName = location.split(',')[0].trim();
     console.log('[Weather] Input location:', location);
     console.log('[Weather] City name extracted:', cityName);
+
+    // Return cached result if fresh
+    const cacheKey = cityName.toLowerCase();
+    const cached = weatherCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < CACHE_TTL) {
+      console.log('[Weather] Serving from cache:', cacheKey);
+      return res.json(cached.data);
+    }
 
     const geoRes = await axios.get('https://geocoding-api.open-meteo.com/v1/search', {
       params: { name: cityName, count: 1, language: 'en', format: 'json' },
@@ -21,15 +32,26 @@ export const getWeather = async (req, res) => {
     const { latitude, longitude, name, country } = place;
     console.log('[Weather] Resolved place:', name, country, latitude, longitude);
 
-    const weatherRes = await axios.get('https://api.open-meteo.com/v1/forecast', {
-      params: {
-        latitude,
-        longitude,
-        daily: 'temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum',
-        timezone: 'auto',
-        forecast_days: 7,
-      },
-    });
+    const forecastParams = {
+      latitude, longitude,
+      daily: 'temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum',
+      timezone: 'auto', forecast_days: 7,
+    };
+
+    let weatherRes;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        weatherRes = await axios.get('https://api.open-meteo.com/v1/forecast', { params: forecastParams });
+        break;
+      } catch (e) {
+        console.log(`[Weather] Forecast attempt ${attempt} failed: ${e.response?.status} ${e.message}`);
+        if (e.response?.status === 429 && attempt < 3) {
+          await new Promise((r) => setTimeout(r, attempt * 1000));
+        } else {
+          throw e;
+        }
+      }
+    }
     console.log('[Weather] Forecast API status:', weatherRes.status);
     console.log('[Weather] Daily keys:', Object.keys(weatherRes.data.daily || {}));
 
@@ -47,7 +69,9 @@ export const getWeather = async (req, res) => {
       icon: getWeatherIcon(wCode[i]),
     }));
 
-    res.json({ location: `${name}, ${country}`, forecast });
+    const result = { location: `${name}, ${country}`, forecast };
+    weatherCache.set(cacheKey, { data: result, ts: Date.now() });
+    res.json(result);
   } catch (err) {
     console.error('[Weather] ERROR:', err.message);
     console.error('[Weather] Stack:', err.stack);

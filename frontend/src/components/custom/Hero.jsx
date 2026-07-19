@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { useTheme } from 'next-themes';
 import { Button } from '../ui/button';
 import { Sparkles, MapPin, Clock, Wallet, Zap, Globe, Star } from 'lucide-react';
 
@@ -26,7 +27,6 @@ const particles = Array.from({ length: 30 }, (_, i) => ({
   size: Math.random() * 2 + 0.8,
   duration: Math.random() * 8 + 8,
   delay: Math.random() * 6,
-  opacity: Math.random() * 0.5 + 0.2,
 }));
 
 function TiltCard({ children, className }) {
@@ -42,16 +42,11 @@ function TiltCard({ children, className }) {
     rotateY.set(((e.clientX - cx) / (rect.width / 2)) * 8);
   };
 
-  const handleMouseLeave = () => {
-    rotateX.set(0);
-    rotateY.set(0);
-  };
-
   return (
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => { rotateX.set(0); rotateY.set(0); }}
       style={{ rotateX, rotateY, transformPerspective: 800 }}
       whileHover={{ scale: 1.06, y: -4 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -74,6 +69,9 @@ const itemVariants = {
 
 function Hero() {
   const [destIndex, setDestIndex] = useState(0);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const glowX = useTransform(mouseX, (v) => v - 250);
@@ -84,30 +82,30 @@ function Hero() {
     return () => clearInterval(id);
   }, []);
 
-  const handleMouseMove = (e) => {
-    mouseX.set(e.clientX);
-    mouseY.set(e.clientY);
-  };
+  // Theme-aware values
+  const baseBg = isDark ? '#030712' : '#ffffff';
+  const orbOpacity = isDark ? 0.55 : 0.14;
+  const orbOpacity2 = isDark ? 0.50 : 0.12;
+  const orbOpacity3 = isDark ? 0.40 : 0.10;
+  const orbOpacity4 = isDark ? 0.25 : 0.08;
+  const particleColor = isDark ? 'bg-white' : 'bg-violet-400';
+  const particleOpacityBase = isDark ? 0.25 : 0.35;
 
   return (
     <div
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      onMouseMove={handleMouseMove}
+      onMouseMove={(e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); }}
     >
-      {/* Deep dark base */}
-      <div className="absolute inset-0 bg-[#030712]" />
+      {/* Base background */}
+      <div className="absolute inset-0 transition-colors duration-500" style={{ background: baseBg }} />
 
       {/* Aurora orb — blue */}
       <motion.div
         className="absolute rounded-full"
         style={{
           background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
-          width: 700,
-          height: 700,
-          top: '-20%',
-          left: '-10%',
-          filter: 'blur(80px)',
-          opacity: 0.55,
+          width: 700, height: 700, top: '-20%', left: '-10%',
+          filter: 'blur(80px)', opacity: orbOpacity,
         }}
         animate={{ x: [0, 140, -60, 0], y: [0, 80, -100, 0], scale: [1, 1.15, 0.92, 1] }}
         transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
@@ -118,12 +116,8 @@ function Hero() {
         className="absolute rounded-full"
         style={{
           background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)',
-          width: 650,
-          height: 650,
-          top: '5%',
-          right: '-15%',
-          filter: 'blur(90px)',
-          opacity: 0.5,
+          width: 650, height: 650, top: '5%', right: '-15%',
+          filter: 'blur(90px)', opacity: orbOpacity2,
         }}
         animate={{ x: [0, -110, 70, 0], y: [0, 130, -70, 0], scale: [1, 0.9, 1.2, 1] }}
         transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
@@ -134,12 +128,8 @@ function Hero() {
         className="absolute rounded-full"
         style={{
           background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)',
-          width: 550,
-          height: 550,
-          bottom: '-15%',
-          left: '25%',
-          filter: 'blur(100px)',
-          opacity: 0.4,
+          width: 550, height: 550, bottom: '-15%', left: '25%',
+          filter: 'blur(100px)', opacity: orbOpacity3,
         }}
         animate={{ x: [0, -90, 110, 0], y: [0, -110, 60, 0], scale: [1, 1.3, 0.85, 1] }}
         transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
@@ -150,50 +140,46 @@ function Hero() {
         className="absolute rounded-full"
         style={{
           background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
-          width: 350,
-          height: 350,
-          top: '40%',
-          left: '60%',
-          filter: 'blur(80px)',
-          opacity: 0.25,
+          width: 350, height: 350, top: '40%', left: '60%',
+          filter: 'blur(80px)', opacity: orbOpacity4,
         }}
         animate={{ x: [0, 60, -40, 0], y: [0, -80, 40, 0] }}
         transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
       />
 
-      {/* Dot grid overlay */}
+      {/* Dot grid */}
       <div
-        className="absolute inset-0 opacity-[0.07]"
+        className="absolute inset-0"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
+          backgroundImage: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.9)' : 'rgba(100,60,200,0.35)'} 1px, transparent 1px)`,
           backgroundSize: '30px 30px',
+          opacity: isDark ? 0.07 : 0.18,
         }}
       />
 
-      {/* Subtle top vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(120,80,255,0.15),transparent)]" />
+      {/* Light mode: extra subtle gradient wash */}
+      {!isDark && (
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 via-violet-50/40 to-pink-50/60" />
+      )}
 
-      {/* Mouse-follow glow */}
+      {/* Mouse glow */}
       <motion.div
         className="absolute pointer-events-none hidden md:block"
         style={{
-          left: glowX,
-          top: glowY,
-          width: 500,
-          height: 500,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 65%)',
+          left: glowX, top: glowY, width: 500, height: 500,
+          background: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(120,80,255,0.06)'} 0%, transparent 65%)`,
           borderRadius: '50%',
         }}
       />
 
-      {/* Stars / particles */}
+      {/* Particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {particles.map((p) => (
           <motion.div
             key={p.id}
-            className="absolute rounded-full bg-white"
-            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: p.opacity }}
-            animate={{ y: [0, -40, 0], opacity: [p.opacity, p.opacity * 2.5, p.opacity] }}
+            className={`absolute rounded-full ${particleColor}`}
+            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: particleOpacityBase }}
+            animate={{ y: [0, -40, 0], opacity: [particleOpacityBase, particleOpacityBase * 2.5, particleOpacityBase] }}
             transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
           />
         ))}
@@ -208,19 +194,26 @@ function Hero() {
       >
         {/* Badge */}
         <motion.div variants={itemVariants}>
-          <span className="inline-flex items-center gap-2 bg-white/8 backdrop-blur-md text-white/90 text-sm font-medium px-5 py-2 rounded-full mb-8 border border-white/15 shadow-lg shadow-black/30">
-            <Sparkles className="h-4 w-4 text-violet-400" /> Powered by Groq AI
+          <span className={`inline-flex items-center gap-2 text-sm font-medium px-5 py-2 rounded-full mb-8 border shadow-lg ${
+            isDark
+              ? 'bg-white/8 text-white/90 border-white/15 shadow-black/30'
+              : 'bg-violet-50 text-violet-700 border-violet-200/80 shadow-violet-100'
+          }`}>
+            <Sparkles className={`h-4 w-4 ${isDark ? 'text-violet-400' : 'text-violet-500'}`} />
+            Powered by Groq AI
           </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
           variants={itemVariants}
-          className="font-extrabold text-5xl md:text-6xl lg:text-8xl text-white leading-[1.08] mb-5 tracking-tight"
+          className={`font-extrabold text-5xl md:text-6xl lg:text-8xl leading-[1.08] mb-5 tracking-tight ${
+            isDark ? 'text-white' : 'text-gray-900'
+          }`}
         >
           Plan Your Dream
           <br />
-          <span className="text-white/60">Trip to </span>
+          <span className={isDark ? 'text-white/60' : 'text-gray-500'}>Trip to </span>
           <span className="inline-block relative" style={{ minWidth: '260px' }}>
             <AnimatePresence mode="wait">
               <motion.span
@@ -229,7 +222,7 @@ function Hero() {
                 animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                 exit={{ opacity: 0, y: -28, filter: 'blur(8px)' }}
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="inline-block bg-gradient-to-r from-violet-400 via-pink-400 to-yellow-300 bg-clip-text text-transparent"
+                className="inline-block bg-gradient-to-r from-violet-500 via-pink-500 to-orange-400 bg-clip-text text-transparent"
               >
                 {destinations[destIndex]}
               </motion.span>
@@ -240,10 +233,15 @@ function Hero() {
         {/* Subtitle */}
         <motion.p
           variants={itemVariants}
-          className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className={`text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed ${
+            isDark ? 'text-white/50' : 'text-gray-500'
+          }`}
         >
           Tell us your destination, budget, and travel style —{' '}
-          <span className="text-white/80 font-medium">our AI builds a personalized day-by-day itinerary</span> just for you.
+          <span className={`font-medium ${isDark ? 'text-white/80' : 'text-gray-800'}`}>
+            our AI builds a personalized day-by-day itinerary
+          </span>{' '}
+          just for you.
         </motion.p>
 
         {/* CTA */}
@@ -252,11 +250,10 @@ function Hero() {
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
-              className="relative overflow-hidden inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-pink-500 hover:from-violet-500 hover:to-pink-400 text-white font-bold px-10 py-4 text-lg rounded-2xl shadow-2xl shadow-violet-900/50 transition-shadow"
+              className="relative overflow-hidden inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-pink-500 hover:from-violet-500 hover:to-pink-400 text-white font-bold px-10 py-4 text-lg rounded-2xl shadow-2xl shadow-violet-500/30 transition-shadow"
             >
               <span className="relative z-10">Start Planning — It&apos;s Free</span>
               <Sparkles className="h-5 w-5 relative z-10" />
-              {/* Shimmer */}
               <motion.span
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                 animate={{ x: ['-100%', '200%'] }}
@@ -264,8 +261,9 @@ function Hero() {
               />
             </motion.button>
           </Link>
-
-          <p className="mt-4 text-white/35 text-sm">No signup required · Free forever</p>
+          <p className={`mt-4 text-sm ${isDark ? 'text-white/30' : 'text-gray-400'}`}>
+            No signup required · Free forever
+          </p>
         </motion.div>
 
         {/* Stats */}
@@ -274,10 +272,10 @@ function Hero() {
           className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 mb-16"
         >
           {stats.map((s, i) => (
-            <div key={i} className="flex items-center gap-2 text-white/60 text-sm font-medium">
-              <span className="text-violet-400">{s.icon}</span>
-              <span className="text-white/80">{s.label}</span>
-              {i < stats.length - 1 && <span className="ml-6 text-white/15 hidden sm:inline">|</span>}
+            <div key={i} className={`flex items-center gap-2 text-sm font-medium ${isDark ? 'text-white/60' : 'text-gray-500'}`}>
+              <span className="text-violet-500">{s.icon}</span>
+              <span className={isDark ? 'text-white/80' : 'text-gray-700'}>{s.label}</span>
+              {i < stats.length - 1 && <span className={`ml-6 hidden sm:inline ${isDark ? 'text-white/15' : 'text-gray-200'}`}>|</span>}
             </div>
           ))}
         </motion.div>
@@ -287,11 +285,15 @@ function Hero() {
           {features.map((f, i) => (
             <TiltCard
               key={i}
-              className="bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-2xl p-5 text-white text-left cursor-default shadow-xl shadow-black/30 hover:border-white/20 transition-colors"
+              className={`rounded-2xl p-5 text-left cursor-default shadow-xl transition-colors ${
+                isDark
+                  ? 'bg-white/[0.04] backdrop-blur-md border border-white/10 hover:border-white/20 shadow-black/30'
+                  : 'bg-white border border-gray-100 hover:border-violet-200 shadow-violet-50'
+              }`}
             >
-              <div className="mb-3 text-violet-400">{f.icon}</div>
-              <h3 className="font-bold text-sm text-white/90">{f.title}</h3>
-              <p className="text-white/45 text-xs mt-1 leading-relaxed">{f.desc}</p>
+              <div className="mb-3 text-violet-500">{f.icon}</div>
+              <h3 className={`font-bold text-sm ${isDark ? 'text-white/90' : 'text-gray-800'}`}>{f.title}</h3>
+              <p className={`text-xs mt-1 leading-relaxed ${isDark ? 'text-white/45' : 'text-gray-400'}`}>{f.desc}</p>
             </TiltCard>
           ))}
         </motion.div>

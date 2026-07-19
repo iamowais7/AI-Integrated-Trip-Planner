@@ -14,12 +14,13 @@ import { toast } from 'sonner';
 function Header() {
   const [openDialog, setOpenDialog] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const { user, isLoggedIn, login, logout } = useAuthStore();
   const location = useLocation();
 
   const isHero = location.pathname === '/';
   const heroTop = isHero && !scrolled;
+  const isDark = resolvedTheme === 'dark';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -28,10 +29,14 @@ function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // On hero at top: white text on dark bg, dark text on light bg
   const navClass = (path) => {
     const isActive = location.pathname === path;
-    if (heroTop) {
-      return `gap-1 text-white hover:text-white hover:bg-white/20 ${isActive ? 'bg-white/20 font-semibold' : ''}`;
+    if (heroTop && isDark) {
+      return `gap-1 text-white hover:text-white hover:bg-white/15 ${isActive ? 'bg-white/15 font-semibold' : ''}`;
+    }
+    if (heroTop && !isDark) {
+      return `gap-1 text-gray-700 hover:text-gray-900 hover:bg-black/5 ${isActive ? 'bg-violet-100 text-violet-700 font-semibold' : ''}`;
     }
     return `gap-1 ${isActive ? 'bg-primary/10 text-primary font-semibold' : ''}`;
   };
@@ -65,7 +70,9 @@ function Header() {
     <motion.header
       className={`sticky top-0 z-50 px-5 py-3 flex justify-between items-center border-b transition-all duration-300 ${
         heroTop
-          ? 'bg-black/30 backdrop-blur-md border-white/10'
+          ? isDark
+            ? 'bg-black/30 backdrop-blur-md border-white/10'
+            : 'bg-white/60 backdrop-blur-md border-gray-200/60 shadow-sm'
           : 'bg-background/95 backdrop-blur-xl border-border shadow-sm'
       }`}
       animate={{ opacity: 1 }}
@@ -128,7 +135,7 @@ function Header() {
           <Button
             onClick={() => setOpenDialog(true)}
             size="sm"
-            className={heroTop ? 'bg-white/20 text-white hover:bg-white/30 border border-white/30' : ''}
+            className={heroTop && isDark ? 'bg-white/15 text-white hover:bg-white/25 border border-white/20' : ''}
             variant={heroTop ? 'ghost' : 'default'}
           >
             Sign In
@@ -139,7 +146,7 @@ function Header() {
           variant="ghost"
           size="icon"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className={`ml-1 ${heroTop ? 'text-white hover:bg-white/20' : ''}`}
+          className={`ml-1 ${heroTop && isDark ? 'text-white hover:bg-white/15' : ''}`}
         >
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>

@@ -5,18 +5,22 @@ export const getWeather = async (req, res) => {
   if (!location) return res.status(400).json({ message: 'location is required' });
 
   try {
-    // Geocode city name to lat/lng using Open-Meteo geocoding (free, no key)
     const cityName = location.split(',')[0].trim();
+    console.log('[Weather] Input location:', location);
+    console.log('[Weather] City name extracted:', cityName);
+
     const geoRes = await axios.get('https://geocoding-api.open-meteo.com/v1/search', {
       params: { name: cityName, count: 1, language: 'en', format: 'json' },
     });
+    console.log('[Weather] Geo API status:', geoRes.status);
+    console.log('[Weather] Geo results:', JSON.stringify(geoRes.data));
 
     const place = geoRes.data.results?.[0];
     if (!place) return res.status(404).json({ message: 'Location not found' });
 
     const { latitude, longitude, name, country } = place;
+    console.log('[Weather] Resolved place:', name, country, latitude, longitude);
 
-    // Fetch 7-day forecast
     const weatherRes = await axios.get('https://api.open-meteo.com/v1/forecast', {
       params: {
         latitude,
@@ -26,10 +30,13 @@ export const getWeather = async (req, res) => {
         forecast_days: 7,
       },
     });
+    console.log('[Weather] Forecast API status:', weatherRes.status);
+    console.log('[Weather] Daily keys:', Object.keys(weatherRes.data.daily || {}));
 
     const daily = weatherRes.data.daily;
-
     const wCode = daily.weather_code ?? daily.weathercode;
+    console.log('[Weather] weather_code sample:', wCode?.slice(0, 3));
+
     const forecast = daily.time.map((date, i) => ({
       date,
       maxTemp: daily.temperature_2m_max[i],
@@ -42,8 +49,9 @@ export const getWeather = async (req, res) => {
 
     res.json({ location: `${name}, ${country}`, forecast });
   } catch (err) {
-    console.error('Weather fetch error:', err.message);
-    res.status(500).json({ message: 'Failed to fetch weather' });
+    console.error('[Weather] ERROR:', err.message);
+    console.error('[Weather] Stack:', err.stack);
+    res.status(500).json({ message: 'Failed to fetch weather', detail: err.message });
   }
 };
 

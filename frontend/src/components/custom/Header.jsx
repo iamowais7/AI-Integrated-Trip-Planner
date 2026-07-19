@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import { Sun, Moon, Plus, Map, Phone, Bot, HelpCircle } from 'lucide-react';
@@ -12,12 +13,28 @@ import { toast } from 'sonner';
 
 function Header() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { theme, setTheme } = useTheme();
   const { user, isLoggedIn, login, logout } = useAuthStore();
   const location = useLocation();
 
-  const navClass = (path) =>
-    `gap-1 ${location.pathname === path ? 'bg-primary/10 text-primary font-semibold' : ''}`;
+  const isHero = location.pathname === '/';
+  const heroTop = isHero && !scrolled;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const navClass = (path) => {
+    const isActive = location.pathname === path;
+    if (heroTop) {
+      return `gap-1 text-white hover:text-white hover:bg-white/20 ${isActive ? 'bg-white/20 font-semibold' : ''}`;
+    }
+    return `gap-1 ${isActive ? 'bg-primary/10 text-primary font-semibold' : ''}`;
+  };
 
   useEffect(() => {
     if (isLoggedIn && !user) {
@@ -45,7 +62,14 @@ function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border px-5 py-3 flex justify-between items-center">
+    <motion.header
+      className={`sticky top-0 z-50 px-5 py-3 flex justify-between items-center border-b transition-all duration-300 ${
+        heroTop
+          ? 'bg-white/10 backdrop-blur-sm border-white/20'
+          : 'bg-background/90 backdrop-blur-xl border-border shadow-sm'
+      }`}
+      animate={{ opacity: 1 }}
+    >
       <Link to="/">
         <img src="/logoipsum-339.svg" className="h-8" alt="Logo" />
       </Link>
@@ -101,14 +125,21 @@ function Header() {
             </Popover>
           </>
         ) : (
-          <Button onClick={() => setOpenDialog(true)} size="sm">Sign In</Button>
+          <Button
+            onClick={() => setOpenDialog(true)}
+            size="sm"
+            className={heroTop ? 'bg-white/20 text-white hover:bg-white/30 border border-white/30' : ''}
+            variant={heroTop ? 'ghost' : 'default'}
+          >
+            Sign In
+          </Button>
         )}
 
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="ml-1"
+          className={`ml-1 ${heroTop ? 'text-white hover:bg-white/20' : ''}`}
         >
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
@@ -129,7 +160,7 @@ function Header() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-    </header>
+    </motion.header>
   );
 }
 

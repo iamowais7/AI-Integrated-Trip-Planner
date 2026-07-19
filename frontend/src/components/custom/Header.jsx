@@ -65,8 +65,8 @@ function Header() {
     <motion.header
       className={`sticky top-0 z-50 px-5 py-3 flex justify-between items-center border-b transition-all duration-300 ${
         heroTop
-          ? 'bg-white/10 backdrop-blur-sm border-white/20'
-          : 'bg-background/90 backdrop-blur-xl border-border shadow-sm'
+          ? 'bg-black/30 backdrop-blur-md border-white/10'
+          : 'bg-background/95 backdrop-blur-xl border-border shadow-sm'
       }`}
       animate={{ opacity: 1 }}
     >

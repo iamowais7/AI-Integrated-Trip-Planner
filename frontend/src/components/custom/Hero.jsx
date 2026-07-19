@@ -82,14 +82,7 @@ function Hero() {
     return () => clearInterval(id);
   }, []);
 
-  // Theme-aware values
   const baseBg = isDark ? '#030712' : '#ffffff';
-  const orbOpacity = isDark ? 0.55 : 0.14;
-  const orbOpacity2 = isDark ? 0.50 : 0.12;
-  const orbOpacity3 = isDark ? 0.40 : 0.10;
-  const orbOpacity4 = isDark ? 0.25 : 0.08;
-  const particleColor = isDark ? 'bg-white' : 'bg-violet-400';
-  const particleOpacityBase = isDark ? 0.25 : 0.35;
 
   return (
     <div
@@ -97,93 +90,59 @@ function Hero() {
       onMouseMove={(e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); }}
     >
       {/* Base background */}
-      <div className="absolute inset-0 transition-colors duration-500" style={{ background: baseBg }} />
+      <div className="absolute inset-0" style={{ background: baseBg }} />
 
-      {/* Aurora orb — blue */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
-          width: 700, height: 700, top: '-20%', left: '-10%',
-          filter: 'blur(80px)', opacity: orbOpacity,
-        }}
-        animate={{ x: [0, 140, -60, 0], y: [0, 80, -100, 0], scale: [1, 1.15, 0.92, 1] }}
-        transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* Aurora orb — violet */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)',
-          width: 650, height: 650, top: '5%', right: '-15%',
-          filter: 'blur(90px)', opacity: orbOpacity2,
-        }}
-        animate={{ x: [0, -110, 70, 0], y: [0, 130, -70, 0], scale: [1, 0.9, 1.2, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
-      />
-
-      {/* Aurora orb — pink */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)',
-          width: 550, height: 550, bottom: '-15%', left: '25%',
-          filter: 'blur(100px)', opacity: orbOpacity3,
-        }}
-        animate={{ x: [0, -90, 110, 0], y: [0, -110, 60, 0], scale: [1, 1.3, 0.85, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
-      />
-
-      {/* Cyan accent */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)',
-          width: 350, height: 350, top: '40%', left: '60%',
-          filter: 'blur(80px)', opacity: orbOpacity4,
-        }}
-        animate={{ x: [0, 60, -40, 0], y: [0, -80, 40, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-      />
-
-      {/* Dot grid */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.9)' : 'rgba(100,60,200,0.35)'} 1px, transparent 1px)`,
-          backgroundSize: '30px 30px',
-          opacity: isDark ? 0.07 : 0.18,
-        }}
-      />
-
-      {/* Light mode: extra subtle gradient wash */}
-      {!isDark && (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 via-violet-50/40 to-pink-50/60" />
-      )}
-
-      {/* Mouse glow */}
-      <motion.div
-        className="absolute pointer-events-none hidden md:block"
-        style={{
-          left: glowX, top: glowY, width: 500, height: 500,
-          background: `radial-gradient(circle, ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(120,80,255,0.06)'} 0%, transparent 65%)`,
-          borderRadius: '50%',
-        }}
-      />
-
-      {/* Particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {particles.map((p) => (
+      {isDark && (
+        <>
+          {/* Aurora orb — blue */}
           <motion.div
-            key={p.id}
-            className={`absolute rounded-full ${particleColor}`}
-            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: particleOpacityBase }}
-            animate={{ y: [0, -40, 0], opacity: [particleOpacityBase, particleOpacityBase * 2.5, particleOpacityBase] }}
-            transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute rounded-full"
+            style={{ background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)', width: 700, height: 700, top: '-20%', left: '-10%', filter: 'blur(80px)', opacity: 0.55 }}
+            animate={{ x: [0, 140, -60, 0], y: [0, 80, -100, 0], scale: [1, 1.15, 0.92, 1] }}
+            transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
           />
-        ))}
-      </div>
+          {/* Aurora orb — violet */}
+          <motion.div
+            className="absolute rounded-full"
+            style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)', width: 650, height: 650, top: '5%', right: '-15%', filter: 'blur(90px)', opacity: 0.50 }}
+            animate={{ x: [0, -110, 70, 0], y: [0, 130, -70, 0], scale: [1, 0.9, 1.2, 1] }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+          />
+          {/* Aurora orb — pink */}
+          <motion.div
+            className="absolute rounded-full"
+            style={{ background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)', width: 550, height: 550, bottom: '-15%', left: '25%', filter: 'blur(100px)', opacity: 0.40 }}
+            animate={{ x: [0, -90, 110, 0], y: [0, -110, 60, 0], scale: [1, 1.3, 0.85, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut', delay: 8 }}
+          />
+          {/* Cyan accent */}
+          <motion.div
+            className="absolute rounded-full"
+            style={{ background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)', width: 350, height: 350, top: '40%', left: '60%', filter: 'blur(80px)', opacity: 0.25 }}
+            animate={{ x: [0, 60, -40, 0], y: [0, -80, 40, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          />
+          {/* Dot grid */}
+          <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+          {/* Mouse glow */}
+          <motion.div
+            className="absolute pointer-events-none hidden md:block"
+            style={{ left: glowX, top: glowY, width: 500, height: 500, background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 65%)', borderRadius: '50%' }}
+          />
+          {/* Particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {particles.map((p) => (
+              <motion.div
+                key={p.id}
+                className="absolute rounded-full bg-white"
+                style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: 0.25 }}
+                animate={{ y: [0, -40, 0], opacity: [0.25, 0.65, 0.25] }}
+                transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Content */}
       <motion.div
@@ -299,8 +258,8 @@ function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      {/* Bottom fade (dark only) */}
+      {isDark && <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />}
     </div>
   );
 }

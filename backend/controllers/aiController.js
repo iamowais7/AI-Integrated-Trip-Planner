@@ -123,6 +123,6 @@ export const supportChat = async (req, res) => {
     res.json({ reply });
   } catch (err) {
     console.error('Support chat error:', err.message);
-    res.status(500).json({ message: 'Failed to get response' });
+    res.status(500).json({ message: 'Failed to get response', detail: err.message });
   }
 };

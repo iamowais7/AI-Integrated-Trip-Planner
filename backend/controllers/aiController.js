@@ -55,7 +55,8 @@ export const generateTrip = async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
 
     const stream = await getGroq().chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
+      reasoning_effort: 'low',
       messages: [
         {
           role: 'system',
@@ -64,7 +65,7 @@ export const generateTrip = async (req, res) => {
         { role: 'user', content: prompt },
       ],
       temperature: 0.7,
-      max_tokens: 4096,
+      max_tokens: 6000,
       stream: true,
     });
 
@@ -106,7 +107,8 @@ export const supportChat = async (req, res) => {
   if (!message) return res.status(400).json({ message: 'message is required' });
   try {
     const result = await getGroq().chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
+      reasoning_effort: 'low',
       messages: [
         {
           role: 'system',
@@ -121,6 +123,6 @@ export const supportChat = async (req, res) => {
     res.json({ reply });
   } catch (err) {
     console.error('Support chat error:', err.message);
-    res.status(500).json({ message: 'Failed to get response' });
+    res.status(500).json({ message: 'Failed to get response', detail: err.message });
   }
 };
